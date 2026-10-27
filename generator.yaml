@@ -64,6 +64,16 @@ resources:
       HealthCheckType:
         late_initialize:
           skip_incomplete_check: {}
+      # VPCZoneIdentifier is user-set, but when omitted AWS derives it from the
+      # launched instances' subnets, so without late_initialize the controller
+      # sees a perpetual nil-vs-populated delta. The existing delta_pre_compare
+      # hook already sorts the comma-separated subnet IDs symmetrically on both
+      # sides, so an absorbed AWS value compares equal to the user's just like a
+      # user-set value would; late-initializing it is therefore safe and closes
+      # the last of the four fields named in #2998.
+      VPCZoneIdentifier:
+        late_initialize:
+          skip_incomplete_check: {}
       CreatedTime:
         is_read_only: true
         from:

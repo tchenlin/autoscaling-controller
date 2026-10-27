@@ -50,7 +50,7 @@ var (
 // +kubebuilder:rbac:groups=autoscaling.services.k8s.aws,resources=autoscalinggroups,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=autoscaling.services.k8s.aws,resources=autoscalinggroups/status,verbs=get;update;patch
 
-var lateInitializeFieldNames = []string{"AvailabilityZoneDistribution", "AvailabilityZones", "CapacityReservationSpecification", "DefaultCooldown", "HealthCheckGracePeriod", "HealthCheckType", "InstanceLifecyclePolicy", "NewInstancesProtectedFromScaleIn", "ServiceLinkedRoleARN", "TerminationPolicies"}
+var lateInitializeFieldNames = []string{"AvailabilityZoneDistribution", "AvailabilityZones", "CapacityReservationSpecification", "DefaultCooldown", "HealthCheckGracePeriod", "HealthCheckType", "InstanceLifecyclePolicy", "NewInstancesProtectedFromScaleIn", "ServiceLinkedRoleARN", "TerminationPolicies", "VPCZoneIdentifier"}
 
 // resourceManager is responsible for providing a consistent way to perform
 // CRUD operations in a backend AWS service API for Book custom resources.
@@ -291,6 +291,9 @@ func (rm *resourceManager) lateInitializeFromReadOneOutput(
 	}
 	if observedKo.Spec.TerminationPolicies != nil && latestKo.Spec.TerminationPolicies == nil {
 		latestKo.Spec.TerminationPolicies = observedKo.Spec.TerminationPolicies
+	}
+	if observedKo.Spec.VPCZoneIdentifier != nil && latestKo.Spec.VPCZoneIdentifier == nil {
+		latestKo.Spec.VPCZoneIdentifier = observedKo.Spec.VPCZoneIdentifier
 	}
 	return &resource{latestKo}
 }
